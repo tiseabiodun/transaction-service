@@ -55,10 +55,41 @@ public class AccountServiceImpl implements AccountService {
         account.setName(name);
         account.setBalance(balance);
         account.setAccountNumber(generateRandomNumber());
+        account.setActive(true);
 
         Account savedAccount = accountRepository.save(account);
 
         return "Created successfully with ID "+savedAccount.getId();
+    }
+
+    public String freezeAccount(String accountNumber, String reason){
+        System.err.println("here -----");
+        List<String> validReasons = List.of("Suspected Fraud", "Illegal Activity", "Unpaid Debts", "Liabilities", "Government Action", "Bank Policy Violation", "Security Measures", "Account Holder Request");
+        Optional<Account> account = accountRepository.findByAccountNumber(accountNumber);
+
+
+        if(account.isEmpty()){
+            return "This account number does not exist";
+        }
+        System.err.println("Fetched account from DB :: "+account.get());
+        if(!validReasons.contains(reason)){
+            return "This is not a valid reason to freeze this account";
+        }
+
+        Account userAccount = account.get();
+        boolean activeState = userAccount.isActive();
+
+
+        if (!activeState){
+            return "Account has already been frozen";
+        }
+        System.err.println("Before setting status");
+
+        userAccount.setActive(false);
+        accountRepository.save(userAccount);
+        System.err.println("After setting status");
+
+        return "Account has been frozen due to: " + reason;
     }
 
 

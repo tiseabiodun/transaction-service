@@ -13,6 +13,8 @@ public class Account {
     private String accountNumber;
     private double balance = 10000;
     private String accountType = "Savings";
+    @Column(nullable = true)
+    private boolean active;
 
     public String getName() {
         return name;
@@ -58,13 +60,23 @@ public class Account {
         return this.id;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
-                ", accountNumber=" + accountNumber +
+                ", name='" + name + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
                 ", balance=" + balance +
                 ", accountType='" + accountType + '\'' +
+                ", active=" + active +
                 '}';
     }
 

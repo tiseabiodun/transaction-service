@@ -1,6 +1,7 @@
 package dev.tise.transaction_service.controller;
 
 import dev.tise.transaction_service.request.CreateAccountRequest;
+import dev.tise.transaction_service.request.FreezeAccountRequest;
 import dev.tise.transaction_service.request.TransferRequest;
 import dev.tise.transaction_service.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,17 @@ public class AccountController {
             return ResponseEntity.badRequest().body(output);
         }
     }
+    @PatchMapping("/freeze-account")
+    public ResponseEntity<String> freezeAccount(@RequestBody FreezeAccountRequest request) {
+        System.err.println("Freezing account... " + request);
+        String output = accountService.freezeAccount(request.getAccountNumber(), request.getReason());
+        if (output.contains("frozen")) {
+            return new ResponseEntity<>(output, HttpStatus.OK);
+        }
+        else{
+            return ResponseEntity.badRequest().body(output);
 
-    //todo : freeze logic (PATCH)
+        }
+    }
 
 }
