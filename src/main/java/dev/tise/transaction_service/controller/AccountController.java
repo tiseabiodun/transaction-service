@@ -40,4 +40,11 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/customer-loan-category")
+    public ResponseEntity<String> getLoanCategory(@RequestParam  String balance){
+        String output = accountService.getLoanAmount(balance);
+        System.err.println(output);
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
 }

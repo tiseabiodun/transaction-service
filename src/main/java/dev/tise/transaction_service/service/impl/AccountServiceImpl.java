@@ -2,6 +2,7 @@ package dev.tise.transaction_service.service.impl;
 
 import dev.tise.transaction_service.model.Account;
 import dev.tise.transaction_service.model.Customer;
+import dev.tise.transaction_service.model.enums.LoanCategory;
 import dev.tise.transaction_service.repository.AccountRepository;
 import dev.tise.transaction_service.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,27 @@ public class AccountServiceImpl implements AccountService {
             }
 
             return accountNumber;
+
+    }
+
+
+    @Override
+    public String getLoanAmount(String bal) {
+
+        try {
+            double balance = Double.parseDouble(bal);
+            balance = balance / 100;
+            return switch ((int) balance) {
+                case 0, 1,2,3,4,5,6,7,8,9,10 -> LoanCategory.TIER_ONE.name();
+                case 11,12,13,14,15,16,17,18,19,20  -> LoanCategory.TIER_TWO.name();
+                case 21,22,23,24,25, 26, 27, 28, 29, 30 -> LoanCategory.TIER_THREE.name();
+                default -> "Invalid balance entered : " + balance;
+            };
+
+        } catch (Exception e){
+            System.err.println("Error:: " + e.getMessage());
+            return("Server currently down...");
+        }
 
     }
 }
