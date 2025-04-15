@@ -2,6 +2,8 @@ package dev.tise.transaction_service.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "customer")
@@ -18,7 +20,8 @@ public class Customer {
     private String state;
     private String email;
 
-    private String customerAccount;
+
+
 
     public Customer(String name, int age, String state, String email) {
         this.name = name;
@@ -67,13 +70,7 @@ public class Customer {
         this.email = email;
     }
 
-    public String getCustomerAccount() {
-        return customerAccount;
-    }
 
-    public void setCustomerAccount(Account customerAccount) {
-        this.customerAccount = String.valueOf(customerAccount);
-    }
 
     @Override
     public String toString() {
@@ -83,7 +80,6 @@ public class Customer {
                 ", age=" + age +
                 ", state='" + state + '\'' +
                 ", email='" + email + '\'' +
-                ", customerAccount='" + customerAccount + '\'' +
                 '}';
     }
 }

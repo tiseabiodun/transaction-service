@@ -5,6 +5,7 @@ import dev.tise.transaction_service.model.Customer;
 import dev.tise.transaction_service.model.enums.LoanCategory;
 import dev.tise.transaction_service.repository.AccountRepository;
 import dev.tise.transaction_service.service.AccountService;
+import dev.tise.transaction_service.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,11 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepository;
     private static final List<String> accountTypes = List.of("SAVINGS", "CURRENT","FIXED_DEPOSIT");
 
+    @Autowired
+    private CustomerService customerService;
+
     @Override
-    public String createNewAccount(String name, double balance, String accountType) {
+    public String createNewAccount(String name, double balance, String accountType, Integer age, String state, String email) {
 
         try {
             if (name.length() < 5) {
@@ -40,10 +44,26 @@ public class AccountServiceImpl implements AccountService {
                 return "Please select from the listed\nSAVINGS, CURRENT, FIXED_DEPOSIT";
             }
 
-        }
-        catch (RuntimeException e){
-            return "Sorry, the server is currently down, please try again later.";
+            Account account = new Account();
+            account.setAccountType(accountType.toUpperCase());
+            account.setName(name);
+            account.setBalance(balance);
+            account.setAccountNumber(generateRandomNumber());
+            account.setActive(true);
+            Customer customer = customerService.createNewCustomer(name, age, state, email);
 
+            account.setCustomer(customer);
+
+            Account savedAccount = accountRepository.save(account);
+
+
+            return "Created successfully with ID "+savedAccount.getId();
+
+        }
+
+        catch (RuntimeException e){
+            System.err.println("error : "+e.getMessage());
+            return e.getMessage();
         }
         catch(Exception e){
             return "Please ensure you inputted the correct data in their respected fields.";
@@ -51,16 +71,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
 
-        Account account = new Account();
-        account.setAccountType(accountType.toUpperCase());
-        account.setName(name);
-        account.setBalance(balance);
-        account.setAccountNumber(generateRandomNumber());
-        account.setActive(true);
-
-        Account savedAccount = accountRepository.save(account);
-
-        return "Created successfully with ID "+savedAccount.getId();
     }
 
     public String freezeAccount(String accountNumber, String reason){

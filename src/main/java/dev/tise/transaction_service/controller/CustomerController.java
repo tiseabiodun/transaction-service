@@ -16,14 +16,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping("/create-customer")
-    public ResponseEntity<String> createCustomer(@RequestBody CreateCustomerRequest request){
-        System.err.println("in coming request for create customer :: "+request);
-        String output = customerService.createNewCustomer(request.getName(), request.getAge(), request.getState(), request.getEmail());
-        return new ResponseEntity<>(output, HttpStatus.CREATED);
-
-    }
-
     @GetMapping("/get-customer-by-id/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id){
         System.err.println("Fetching customer details for customer with id "+id);
@@ -42,8 +34,6 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.updateCustomer(id, request));
 
     }
-
-    //todo : update account (PUT)
 
 
 }

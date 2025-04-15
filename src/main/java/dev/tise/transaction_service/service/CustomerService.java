@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface CustomerService {
 
-    String createNewCustomer(String name, int age, String state, String email);
+    Customer createNewCustomer(String name, int age, String state, String email);
     String updateCustomer(Long id, CreateCustomerRequest request);
     String deleteCustomer(Long id);
     String insertData(MultipartFile file);

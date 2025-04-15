@@ -16,6 +16,9 @@ public class Account {
     @Column(nullable = true)
     private boolean active;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Customer customer;
+
     public String getName() {
         return name;
     }
@@ -66,6 +69,14 @@ public class Account {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override

@@ -20,21 +20,31 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public String createNewCustomer(String name, int age, String state, String email) {
+    public Customer createNewCustomer(String name, int age, String state, String email) {
         try {
             if (name == null || name.trim().isEmpty()){
-                return "Error: Customer name is required";
+                System.err.println("Error: Customer name is required");
+                throw new RuntimeException("Error: Customer name is required");
             }
             if (name.length() > 20){
-                return "Error: Name must not exceed 20 characters";
+                System.err.println("Error: Name must not exceed 20 characters");
+                throw new RuntimeException("Error: Name must not exceed 20 characters");
+            }
+
+            Customer customer = new Customer();
+
+            Optional<Customer> optionalCustomer = customerRepository.findByEmailIgnoreCase(email);
+            if (optionalCustomer.isPresent()){
+                System.out.println("Customer already exists with email  :: "+email);
+                return optionalCustomer.get();
             }
 
             Customer newCustomer = new Customer(name, age, state, email);
-            Customer savedCustomer = customerRepository.save(newCustomer);
-            return "Hurray new customer successfully created with ID :: "+savedCustomer.getId();
+            return customerRepository.save(newCustomer);
+
         } catch (Exception e){
-            System.err.println("An error occurred while creating a new customer :: "+e.getMessage());
-            return "Ooops We could not create customer, please try again";
+            System.err.println("We could not create customer, please try again");
+            throw new RuntimeException("We could not create customer, please try again");
         }
 
     }
@@ -67,9 +77,8 @@ public class CustomerServiceImpl implements CustomerService {
                 String email = values[3].trim();
 
 
-                Optional<Customer> existingCustomer = customerRepository.findByEmail(email);
+                Optional<Customer> existingCustomer = customerRepository.findByEmailIgnoreCase(email);
                 if (existingCustomer.isPresent()) {
-                    // If the customer already exists, log or handle accordingly
                     System.out.println("Customer with email " + email + " already exists. Skipping...");
                     continue;
                 }

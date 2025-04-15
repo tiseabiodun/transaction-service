@@ -2,7 +2,6 @@ package dev.tise.transaction_service.controller;
 
 import dev.tise.transaction_service.request.CreateAccountRequest;
 import dev.tise.transaction_service.request.FreezeAccountRequest;
-import dev.tise.transaction_service.request.TransferRequest;
 import dev.tise.transaction_service.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ public class AccountController {
     @PostMapping("/create-account")
     public ResponseEntity<String> createAccount(@RequestBody CreateAccountRequest request){
         System.err.println("Incoming request for account creation :: " + request);
-        String output = accountService.createNewAccount(request.getName(), request.getBalance(), request.getAccountType());
+        String output = accountService.createNewAccount(request.getName(), request.getBalance(), request.getAccountType(), request.getAge(), request.getState(), request.getEmail());
         if (output.contains("successfully")){
 
             return new ResponseEntity<>(output, HttpStatus.CREATED);
