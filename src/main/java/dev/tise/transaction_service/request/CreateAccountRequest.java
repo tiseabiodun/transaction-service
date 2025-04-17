@@ -1,10 +1,12 @@
 package dev.tise.transaction_service.request;
 
+import java.time.LocalDate;
+
 public class CreateAccountRequest {
     private String name;
     private double balance;
     private String accountType;
-    private Integer age;
+    private LocalDate dob;
     private String state;
     private String email;
 
@@ -33,12 +35,12 @@ public class CreateAccountRequest {
         this.accountType = accountType;
     }
 
-    public Integer getAge() {
-        return age;
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 
     public String getState() {
@@ -63,7 +65,7 @@ public class CreateAccountRequest {
                 "name='" + name + '\'' +
                 ", balance=" + balance +
                 ", accountType='" + accountType + '\'' +
-                ", age=" + age +
+                ", dob=" + dob +
                 ", state='" + state + '\'' +
                 ", email='" + email + '\'' +
                 '}';

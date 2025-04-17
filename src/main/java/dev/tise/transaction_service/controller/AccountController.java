@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/account")
 
@@ -18,9 +20,9 @@ public class AccountController {
     @PostMapping("/create-account")
     public ResponseEntity<String> createAccount(@RequestBody CreateAccountRequest request){
         System.err.println("Incoming request for account creation :: " + request);
-        String output = accountService.createNewAccount(request.getName(), request.getBalance(), request.getAccountType(), request.getAge(), request.getState(), request.getEmail());
-        if (output.contains("successfully")){
-
+        String output = accountService.createNewAccount(request.getName(), request.getBalance(), request.getAccountType(), request.getDob(), request.getState(), request.getEmail());
+        System.out.println("Output from create account "+output);
+        if (output.contains("successfully") || output.contains("created")){
             return new ResponseEntity<>(output, HttpStatus.CREATED);
         }else {
             return ResponseEntity.badRequest().body(output);
@@ -44,6 +46,12 @@ public class AccountController {
         String output = accountService.getLoanAmount(balance);
         System.err.println(output);
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping("/activate-account")
+    private ResponseEntity<Map<String, String>> activateAccount(@RequestParam String otp,@RequestParam String email,
+            @RequestParam String accountNumber){
+        return ResponseEntity.ok(accountService.activateAccount(otp, email, accountNumber));
     }
 
 }

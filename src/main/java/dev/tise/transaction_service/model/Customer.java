@@ -2,6 +2,7 @@ package dev.tise.transaction_service.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -16,11 +17,14 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private LocalDate dob;
     private int age;
     private String state;
     private String email;
+    private String religion;
 
 
+    //todo: change age to date of birth, add next of kin, religion
 
 
     public Customer(String name, int age, String state, String email) {
@@ -54,6 +58,22 @@ public class Customer {
         this.age = age;
     }
 
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setAge(LocalDate dob) {
+        this.dob = dob;
+    }
+
     public String getState() {
         return state;
     }
@@ -71,15 +91,16 @@ public class Customer {
     }
 
 
-
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", dob=" + dob +
                 ", age=" + age +
                 ", state='" + state + '\'' +
                 ", email='" + email + '\'' +
+                ", religion='" + religion + '\'' +
                 '}';
     }
 }

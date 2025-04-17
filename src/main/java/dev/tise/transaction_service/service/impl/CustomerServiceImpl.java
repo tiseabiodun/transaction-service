@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @Service
@@ -20,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public Customer createNewCustomer(String name, int age, String state, String email) {
+    public Customer createNewCustomer(String name, LocalDate dob, String state, String email) {
         try {
             if (name == null || name.trim().isEmpty()){
                 System.err.println("Error: Customer name is required");
@@ -31,6 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
                 throw new RuntimeException("Error: Name must not exceed 20 characters");
             }
 
+            int age = Period.between(dob, LocalDate.now()).getYears();
             Customer customer = new Customer();
 
             Optional<Customer> optionalCustomer = customerRepository.findByEmailIgnoreCase(email);
@@ -38,6 +41,10 @@ public class CustomerServiceImpl implements CustomerService {
                 System.out.println("Customer already exists with email  :: "+email);
                 return optionalCustomer.get();
             }
+            if (age<18){
+                throw new RuntimeException("Age is too small, please try again");
+            }
+            customer.setAge(age);
 
             Customer newCustomer = new Customer(name, age, state, email);
             return customerRepository.save(newCustomer);
@@ -173,11 +180,6 @@ public class CustomerServiceImpl implements CustomerService {
                 return "Customer with id "+ id + " not found";
             }
 
-            //todo 1: Get the customer id, if it does not exist, give error message
-            //todo 2: if customer exists, update  details
-
-
-
         }catch (Exception ex){
             System.err.println("An error occurred while updating customer with id "+id+ ": "+ex.getMessage());
             return ex.getMessage();
@@ -204,5 +206,10 @@ public class CustomerServiceImpl implements CustomerService {
             throw new  RuntimeException("Failed to get customer with Id : "+id);
         }
 
+    }
+
+    @Override
+    public Optional<Customer> findByEmail(String email) {
+        return customerRepository.findByEmailIgnoreCase(email);
     }
 }
